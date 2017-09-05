@@ -18,7 +18,7 @@
 		<input type="number" id="seed" placeholder="Seed (1 to 65536), leave blank for random" min="0" max="65536" />
 		<br>
 		<button onclick="mapgen()">Generate</button>
-		<script src="https://josephg.github.io/noisejs/perlin.js"></script>
+		<script src="http://josephg.github.io/noisejs/perlin.js"></script>
 		<script>
 			const size = 800
 			const ctx=document.getElementById("c1").getContext("2d")
@@ -70,10 +70,8 @@
 							fillcell(ctx,x,y,"#0055FF")
 						} else if (h<waterlvl+.01) { //beach
 							fillcell(ctx,x,y,"#F0E68C")
-						} else if (h<.7) { //land
-							fillcell(ctx,x,y,"#00FF00")
-						} else { //mountain
-							fillcell(ctx,x,y,"#777777")
+						} else { //land
+							fillcell(ctx,x,y,"rgba(0,"+(255-Math.floor(255*(h-waterlvl)/(1-waterlvl)))+",0,1)")
 						}
 					}
 				}
