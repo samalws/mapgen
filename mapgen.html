@@ -80,7 +80,7 @@
 						} else if (rainfall > .6) { //rainforest
 							fillcell(ctx,x,y,"rgba(0,"+(200-Math.floor(200*(height-waterlvl)/(1-waterlvl)))+",0,1)")
 						} else { //land
-							fillcell(ctx,x,y,"rgba(0,"+(255-Math.floor(200*(height-waterlvl)/(1-waterlvl)))+",0,1)")
+							fillcell(ctx,x,y,"rgba(0,"+(255-Math.floor(255*(height-waterlvl)/(1-waterlvl)))+",0,1)")
 						}
 					}
 				}
