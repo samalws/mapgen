@@ -9,7 +9,7 @@
 		</style>
 	</head>
 	<body>
-		<canvas width=1000 height=500 id="c1"></canvas>
+		<canvas width=800 height=400 id="c1"></canvas>
 		<br>
 		<input type="number" id="waterlvl" placeholder="Water Level (0 to 1), leave blank for .55" step=".05" min="0" max="1" />
 		<br>
@@ -20,7 +20,7 @@
 		<button onclick="mapgen()">Generate</button>
 		<script src="https://josephg.github.io/noisejs/perlin.js"></script>
 		<script>
-			const size = 1000
+			const size = 800
 			const ctx=document.getElementById("c1").getContext("2d")
 			function sphereloc(latitude,longitude) {
 				latitude *= Math.PI*2/size
@@ -39,7 +39,7 @@
 				
 				var height = 0
 				var rainfall = 0
-				for (var i = 0;i<10;i++) {
+				for (var i = 0;i<6;i++) {
 					height += noisewithfreq(Math.pow(2,i),loc,fs) * Math.pow(2,-i-1)
 					rainfall += noisewithfreq(Math.pow(2,i),loc,fs,10000) * Math.pow(2,-i-1)
 				}
@@ -61,7 +61,8 @@
 					frequencyscaler = .7
 				}
 				if (isNaN(seed)) {
-					seed = Math.random()
+					seed = Math.floor(Math.random()*65536 + 1)
+					document.getElementById("seed").value = seed
 				}
 				noise.seed(seed)
 				for (var x=0;x<size;x++) {
@@ -83,7 +84,6 @@
 					}
 				}
 			}
-			mapgen()
 		</script>
 	</body>
 </html>
