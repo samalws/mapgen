@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			input[type=number] {
+				width: 400px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas width=800 height=400 id="c1"></canvas>
+		<br>
+		<input type="number" id="waterlvl" placeholder="Water Level (0 to 1), leave blank for .55" step=".05" min="0" max="1" />
+		<br>
+		<input type="number" id="freq" placeholder="Smoothness (any positive number), leave blank for .7" min="0" />
+		<br>
+		<input type="number" id="seed" placeholder="Seed (1 to 65536), leave blank for random" min="0" max="65536" />
+		<br>
+		<button onclick="mapgen()">Generate</button>
+		<script src="http://josephg.github.io/noisejs/perlin.js"></script>
+		<script>
+			const size = 800
+			const ctx=document.getElementById("c1").getContext("2d")
+			function sphereloc(latitude,longitude) {
+				latitude *= Math.PI*2/size
+				longitude *= Math.PI*2/size
+				var x=Math.cos(latitude)*Math.sin(longitude)
+				var y=Math.sin(latitude)*Math.sin(longitude)
+				var z=Math.cos(longitude)
+				return [x,y,z]
+			}
+			function noisewithfreq(f,l,frequencyscaler) {
+				f *= frequencyscaler
+				return noise.simplex3(l[0]*f,l[1]*f,l[2]*f)
+			}
+			function map(latitude,longitude,fs) {
+				var l=sphereloc(latitude,longitude)
+				var frequencies = [1,   2,   4,    8,    16,    32]
+				var weights     = [.5,.25,.125,.0625,.03125,.03125]
+				var tot = 0
+				for (var i = 0;i<frequencies.length;i++) {
+					tot += noisewithfreq(frequencies[i],l,fs) * weights[i]
+				}
+				return tot
+			}
+			function fillcell(ctx,x,y,c) {
+				ctx.fillStyle=c
+				ctx.fillRect(x,y,x+1,y+1)
+			}
+			function mapgen() {
+				var waterlvl = parseFloat(document.getElementById("waterlvl").value)
+				var frequencyscaler = parseFloat(document.getElementById("freq").value)
+				var seed = parseFloat(document.getElementById("seed").value)
+				if (isNaN(waterlvl)) {
+					waterlvl = .55
+				}
+				if (isNaN(frequencyscaler)) {
+					frequencyscaler = .7
+				}
+				if (isNaN(seed)) {
+					seed = Math.random()
+				}
+				noise.seed(seed)
+				for (var x=0;x<size;x++) {
+					for (var y=0;y<size/2;y++) {
+						h = map(x,y,frequencyscaler) //-.5 to .5
+						h += .5
+						if (h<waterlvl) { //water
+							fillcell(ctx,x,y,"#0055FF")
+						} else if (h<waterlvl+.01) { //beach
+							fillcell(ctx,x,y,"#F0E68C")
+						} else if (h<.7) { //land
+							fillcell(ctx,x,y,"#00FF00")
+						} else { //mountain
+							fillcell(ctx,x,y,"#777777")
+						}
+					}
+				}
+			}
+			mapgen()
+		</script>
+	</body>
+</html>
