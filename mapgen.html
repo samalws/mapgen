@@ -15,9 +15,10 @@
 		<br>
 		<input type="number" id="freq" placeholder="Smoothness (any positive number), leave blank for .7" min="0" />
 		<br>
-		<input type="number" id="seed" placeholder="Seed (1 to 65536), leave blank for random" min="0" max="65536" />
+		<input type="number" id="seed" placeholder="Seed (1 to 65536)" min="0" max="65536" />
 		<br>
 		<button onclick="mapgen()">Generate</button>
+		<button onclick="mapgen(true)">Random</button>
 		<script src="https://josephg.github.io/noisejs/perlin.js"></script>
 		<script>
 			const size = 800
@@ -50,7 +51,7 @@
 				ctx.fillStyle=c
 				ctx.fillRect(x,y,x+1,y+1)
 			}
-			function mapgen() {
+			function mapgen(alwaysrandomize = false) {
 				var waterlvl = parseFloat(document.getElementById("waterlvl").value)
 				var frequencyscaler = parseFloat(document.getElementById("freq").value)
 				var seed = parseFloat(document.getElementById("seed").value)
@@ -60,7 +61,7 @@
 				if (isNaN(frequencyscaler)) {
 					frequencyscaler = .7
 				}
-				if (isNaN(seed)) {
+				if (isNaN(seed) || alwaysrandomize) {
 					seed = Math.floor(Math.random()*65536 + 1)
 					document.getElementById("seed").value = seed
 				}
